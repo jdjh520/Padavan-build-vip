@@ -27,10 +27,10 @@ jobs:
           git clone --depth=1 $CT_URL1 $SRC_DIR
       - name: Build toolchain
         run: |
-          cd $SRC_DIR
+          cd $TC_DIR
           sed -i '/cp -f/d' Makefile
           make CT_TARGET=${CT_TARGET} CT_VERSION=${CT_VERSION}
-          cd ${{ env.TC_DIR}}/crosstool-ng-${CT_VERSION}/toolchain-mipsel
+          cd crosstool-ng-${CT_VERSION}/toolchain-mipsel
           tar cJf ../../${CT_TARGET}.tar.xz *
         env:
           CT_TARGET: ${{ matrix.target }}

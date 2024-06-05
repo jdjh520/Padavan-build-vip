@@ -30,12 +30,12 @@ jobs:
           cd $SRC_DIR
           sed -i '/cp -f/d' Makefile
           make CT_TARGET=${CT_TARGET} CT_VERSION=${CT_VERSION}
-          cd crosstool-ng-${CT_VERSION}/toolchain-mipsel
+          cd ${{ env.TC_DIR}}/crosstool-ng-${CT_VERSION}/toolchain-mipsel
           tar cJf ../../${CT_TARGET}.tar.xz *
         env:
           CT_TARGET: ${{ matrix.target }}
           CT_VERSION: 1.26.0
-          working-directory: toolchain
+          working-directory: ${{ env.TC_DIR}}
       - uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.target }}

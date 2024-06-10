@@ -42,7 +42,7 @@ jobs:
           path: ${{ env.TC_DIR}}/${{ matrix.target }}.tar.xz
       - uses: ncipollo/release-action@main
         with:
-          tag: toolchain-4.4
+          tag: toolchain
           artifacts: ${{ env.TC_DIR}}/${{ matrix.target }}.tar.xz
           allowUpdates: true
           omitBodyDuringUpdate: true

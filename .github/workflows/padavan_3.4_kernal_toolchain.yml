@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [mipsel-linux-uclibc-3.4]
+        target: [mipsel-linux-uclibc]
     steps:
       - uses: actions/checkout@main
       - name: Prepare environment

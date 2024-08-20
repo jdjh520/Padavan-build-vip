@@ -3,8 +3,8 @@ name: padavan_3.4_kernal_toolchain(new)
 on:
   workflow_dispatch:
 env:
-  SRC_DIR: /opt/rt-n56u
-  TC_DIR: /opt/rt-n56u/toolchain
+  CT_DIR: crosstool-ng
+  TC_DIR: crosstool-ng/toolchain
   CT_URL: https://github.com/vipshmily/Padavan-3.4-KVR.git
   
 jobs:
@@ -19,30 +19,28 @@ jobs:
         run: |
           sudo apt update
           sudo apt install unzip libtool-bin ccache curl cmake gperf gawk flex bison nano xxd \
-          fakeroot kmod cpio bc zip git python3-docutils gettext automake autopoint \
-          texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
-          libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
+            fakeroot kmod cpio bc zip git python3-docutils gettext automake autopoint \
+            texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
+            libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
       - name: Clone source code
         run: |
-          git clone --depth=1 $CT_URL $SRC_DIR
+          mkdir -p $CT_DIR
+          git clone --depth=1 $CT_URL $CT_DIR
       - name: Build toolchain
         run: |
-          cd $TC_DIR
-          sed -i '/cp -f/d' Makefile
-          make CT_TARGET=${CT_TARGET} CT_VERSION=${CT_VERSION}
-          cd crosstool-ng-${CT_VERSION}/toolchain-mipsel
-          tar cJf ../../${CT_TARGET}.tar.xz *
+          make CT_TARGET=${CT_TARGET}
+          cd toolchain-mipsel
+          tar cJf ../${CT_TARGET}.tar.xz *
         env:
           CT_TARGET: ${{ matrix.target }}
-          CT_VERSION: 1.26.0
-          working-directory: ${{ env.TC_DIR}}
+        working-directory: ${{ env.TC_DIR}}
       - uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.target }}
           path: ${{ env.TC_DIR}}/${{ matrix.target }}.tar.xz
       - uses: ncipollo/release-action@main
         with:
-          tag: toolchain-3.4
+          tag: toolchain
           artifacts: ${{ env.TC_DIR}}/${{ matrix.target }}.tar.xz
           allowUpdates: true
           omitBodyDuringUpdate: true

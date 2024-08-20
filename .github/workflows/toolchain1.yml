@@ -19,7 +19,7 @@ jobs:
     name: Build Padavan toolchain
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@main
       - name: Prepare environment
         run: |
           sudo apt update
@@ -36,14 +36,14 @@ jobs:
           sed -i '/cp -f/d' Makefile
           make toolchain/build
           cd $toolchain_dir
-          tar cJf ../mipsel-linux-uclibc-gcc10.tar.xz *
-      - uses: actions/upload-artifact@v3
+          tar cJf ../mipsel-linux-uclibc.tar.xz *
+      - uses: actions/upload-artifact@main
         with:
           name: toolchain
-          path: ${{ env.build_dir }}/mipsel-linux-uclibc-gcc10.tar.xz
-      - uses: svenstaro/upload-release-action@2.3.0
+          path: ${{ env.build_dir }}/mipsel-linux-uclibc.tar.xz
+      - uses: svenstaro/upload-release-action@master
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ env.build_dir }}/mipsel-linux-uclibc-gcc10.tar.xz
+          file: ${{ env.build_dir }}/mipsel-linux-uclibc.tar.xz
           tag: toolchain
           overwrite: true

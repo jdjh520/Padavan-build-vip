@@ -5,8 +5,12 @@ on:
   workflow_dispatch:
     inputs:
       production:
-        description: 设置编译的固件型号,空格分隔.
+        description: '设置编译的固件型号,空格分隔'
         default: "MI-R4A"
+        required: false
+      toolchain:
+        description: 'Select the compilation toolchain'
+        default: 'mipsel-linux-uclibc'
         required: false
       release:
         description: "是否需要发布到Release? (不发布也可以到Artifacts下载)"
@@ -190,7 +194,7 @@ jobs:
         # echo "自定义项=y" >> .config
         #########################################################################################
         cd ${{ env.DIR }}
-        sudo make $m
+        sudo make $m TOOLCHAIN=${{ github.event.inputs.toolchain }}
         cd ${{ env.DIR }}/trunk
         sudo mv -f images/*.trx /opt/images/
         done
